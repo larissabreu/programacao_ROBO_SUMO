@@ -1,10 +1,12 @@
 #ifndef REMOTE_DATA
 #define REMOTE_DATA
 
+#include <stdint.h>
+
 #define BitsOn(x,m) (x |= m)
 #define BitsAt(x,m) (x & m)
-#define BitsLShiftOn(x,m,s) (x |= (m << s))
-#define BitsDoubleShiftMask(x,m,s) ((x & m << s) >> s)
+#define BitsLShiftOn(x,m,s) (x |= ((uint32_t)m << s))
+#define BitsDoubleShiftMask(x,m,s) ((x & (uint32_t)m << s) >> s)
 
 namespace Protocol{
     const uint32_t START = 31;
@@ -20,8 +22,8 @@ namespace Protocol{
 
 class RemoteData {
 private:
-    uint32_t data;//<* holds the data, only the firstmost 24 bits are used
 public:
+    uint32_t data;//<* holds the data, only the firstmost 24 bits are used
     RemoteData();//<* initializes data START and STOP bits
     RemoteData(uint16_t x, uint16_t y);//<* initializes every bit necessary
     void write_payload(uint16_t x, uint16_t y);//<* writes the coordinates to data and properly shifts it

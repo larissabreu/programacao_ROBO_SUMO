@@ -2,6 +2,7 @@
 
 RemoteData::RemoteData() {
     data = 0;
+    BitsLShiftOn(data, 1, Protocol::START);
     BitsLShiftOn(data, 3, Protocol::STOP);
     //BitsLShiftOn(data, 1, 10)
 }
