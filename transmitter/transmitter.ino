@@ -19,7 +19,7 @@ void setup() {
 
 void loop() {
     digitalWrite(7,1);// gambiarra pq o corno do jamal fodeu com a porta de 5v
-    RemoteData data;
+    RemoteProtocolHandler data;
     uint8_t buffer[3];// armazena os bytes que serao enviados
     uint16_t x_axis = analogRead(analog_x);
     uint16_t y_axis = analogRead(analog_y);

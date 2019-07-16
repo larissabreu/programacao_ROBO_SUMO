@@ -20,12 +20,12 @@ namespace Protocol{
 }
 
 
-class RemoteData {
+class RemoteProtocolHandler {
 private:
 public:
     uint32_t data;//<* holds the data, only the firstmost 24 bits are used
-    RemoteData();//<* initializes data START and STOP bits
-    RemoteData(uint16_t x, uint16_t y);//<* initializes every bit necessary
+    RemoteProtocolHandler();//<* initializes data START and STOP bits
+    RemoteProtocolHandler(uint16_t x, uint16_t y);//<* initializes every bit necessary
     void write_payload(uint16_t x, uint16_t y);//<* writes the coordinates to data and properly shifts it
                                                //<* \param x 10bits X coordinates
                                                //<* \param y 10bits Y coordinates
