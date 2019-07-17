@@ -1,35 +1,50 @@
-#include <VirtualWire.h>
+#include <RH_ASK.h>
+#include <SPI.h> // Not actually used but needed to compile
 #include "remote_data.hpp"
-#define button_1 5
-#define button_2 6
-#define vin 7
+
+#define DEBUG
+
 const int analog_x = A0;
 const int analog_y = A1;
+const int vout = 7;
+
+RH_ASK driver(4000);
 
 void setup() {
-  pinMode(vin, OUTPUT);
-  pinMode(button_1, INPUT_PULLUP);
-  pinMode(button_2, INPUT_PULLUP);
-  pinMode(analog_x, INPUT);
-  pinMode(analog_y, INPUT);
-  Serial.begin(9600);
-  vw_set_tx_pin(8);
-  vw_setup(2000);   // Bits per sec
+    pinMode(vout, OUTPUT);
+    pinMode(analog_x, INPUT);
+    pinMode(analog_y, INPUT);
+#ifdef DEBUG
+    Serial.begin(115200);
+    if (!driver.init())
+        Serial.println("init failed");
+#else
+        driver.init();
+#endif
+    digitalWrite(7,1);// gambiarra pq o corno do jamal fodeu com a porta de 5v
 }
 
 void loop() {
-    digitalWrite(7,1);// gambiarra pq o corno do jamal fodeu com a porta de 5v
-    RemoteProtocolHandler data;
     uint8_t buffer[3];// armazena os bytes que serao enviados
     uint16_t x_axis = analogRead(analog_x);
     uint16_t y_axis = analogRead(analog_y);
+    RemoteProtocolHandler data;
+
     data.write_payload(x_axis, y_axis);// escreve os dados
     data.write_to_byte_array(buffer);
-    Serial.println((char*)buffer);
-    send(buffer, 3);
+
+#ifdef DEBUG
+    print_data(buffer, 3);
+#endif
+
+    driver.send(buffer, 3);
+    driver.waitPacketSent();
 }
-void send (uint8_t *message, uint8_t len)
-{
-  vw_send((uint8_t *)message,len);
-  vw_wait_tx(); // Aguarda o envio de dados
+
+void print_data(uint8_t* buf, uint8_t size){
+    for (uint8_t i = 0; i < size; i++){
+        Serial.print(buf[i], HEX);
+    }
+    Serial.println();
 }
+

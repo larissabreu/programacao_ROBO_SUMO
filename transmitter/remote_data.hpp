@@ -4,17 +4,14 @@
 #include <stdint.h>
 #define BITS_MASK(s,i) ((((uint32_t)1 << s) - 1) << i)
 #define BITS_SET(x,m,i) (x |= ((uint32_t)m << i))
-#define BITS_WRITE(x,v,s,i) (x = (x & !BITS_MASK(s,i)) | (v << i))
-#define BITS_VALUE_AT(x,s,i) ((x & BITS_MASK(s,i) >> i)
+#define BITS_WRITE(x,v,s,i) (x = ((x & ~BITS_MASK(s,i)) | ((uint32_t)v << i)))
+#define BITS_VALUE_AT(x,s,i) (((x & BITS_MASK(s,i)) >> i))
 #define BITS_AT(x,m) (x & m)
-#define BitsAt(x,m) (x & m)
-#define BitsLShiftOn(x,m,s) (x |= ((uint32_t)m << s))
-#define BitsDoubleShiftMask(x,m,s) ((x & (uint32_t)m << s) >> s)
 
 namespace Protocol{
-    const uint32_t START = 31;
+    const uint8_t START = 31;
     //#define PARITY (0x << 11)
-    const uint32_t STOP = 8;
+    const uint8_t STOP = 8;
     const uint8_t X = 21;
     const uint8_t Y = 11;
     const uint8_t FIRST  = 24;

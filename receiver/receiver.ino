@@ -1,31 +1,31 @@
-#include <VirtualWire.h>
 #include <ServoTimer2.h>
+#include <RH_ASK.h>
+#include <SPI.h> // Not actualy used but needed to compile
 #include "remote_data.hpp"
-byte message[VW_MAX_MESSAGE_LEN];    // Armazena as mensagens recebidas
-byte msgLength = VW_MAX_MESSAGE_LEN; // Armazena o tamanho das mensagens
-ServoTimer2 motor;
-ServoTimer2 motor1;
+
+//ServoTimer2 motor;
+//ServoTimer2 motor1;
+
+RH_ASK driver(4000);
+RemoteProtocolHandler data;// Classe usada para manipular os bits recebidos
 
 void setup() {
-    motor.attach(2); 
-    motor1.attach(3); 
+    //motor.attach(2); 
+    //motor1.attach(3); 
     Serial.begin(9600);
-    vw_set_rx_pin(5); 
-    vw_setup(2000); // Bits por segundo
-    vw_rx_start();           
+    if (!driver.init())
+         Serial.println("init failed");
 }
 
 void loop() {
-    RemoteProtocolHandler data;// Classe usada para manipular os bits recebidos
-    uint8_t buffer[3];// Armazena a mensagem recebida    
+    uint8_t buffer[4];// Armazena a mensagem recebida    
+    uint8_t buf_length = 4;// Armazena a mensagem recebida    
 
-    if (vw_get_message(message, &msgLength)) {
-        for (int i = 0; i < 3; i++){// copia a mensagem para o buffer
-            buffer[i] = message[i];
-        }
+    if (driver.recv(buffer, &buf_length)) {
         data.read_from_byte_array(buffer);// interpreta os bits recebidos 
-        motor.write(map(data.get_x(),0,1023,1310, 1690));
-        motor1.write(map(data.get_y(),0,1023,1310, 1690));
-        Serial.println(data.get_x(),HEX);
+        Serial.print("X: ");
+        Serial.print(data.get_x(),HEX);
+        Serial.print(" Y: ");
+        Serial.println(data.get_y(),HEX);
     }  
 }
