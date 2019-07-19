@@ -3,13 +3,10 @@
 #include <SPI.h> // Not actualy used but needed to compile
 #include "remote_data.hpp"
 #include "motor.h"
-Motor motor;
-Motor motor1;
-//ServoTimer2 motor;
+Controller control;
 RH_ASK driver(4000);
 void setup() {
-    motor.attach(2); 
-    motor1.attach(3); 
+    control.attach(2,3); 
     Serial.begin(9600);
     if (!driver.init())
          Serial.println("init failed");
@@ -23,16 +20,9 @@ void loop() {
     if (driver.recv(buffer, &buf_length)) {
         data.read_from_byte_array(buffer);// interpreta os bits recebidos 
         Serial.print("X: ");
-        Serial.print(data.get_x(),HEX);
+        Serial.print(data.get_x(), DEC);
         Serial.print(" Y: ");
-        Serial.println(data.get_y(),HEX);
-        motor.move(map(data.get_y(), 0, 1023, -100, 100));
-        motor1.move(map(data.get_y(), 0, 1023, -100, 100));
+        Serial.println(data.get_y(), DEC);
+        control.write(map(data.get_x(),0,1023,-100,100), map(data.get_y(),0,1023,-100,100));
     }
-    //motor.write(1300);
-   
-    //delay(1000);
-    //motor.move(-50);
-    //motor1.move(-50);
-    //delay(500);
 }
