@@ -3,7 +3,7 @@
 Motor:: Motor() : servo(){
 }; 
 void Motor :: move(int val){
-	servo.write(map(val, -100, 100, 1300, 1700));
+	servo.write(val);
 };
 void Motor:: attach(int pin){
   servo.attach(pin);

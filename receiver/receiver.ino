@@ -3,6 +3,7 @@
 #include <SPI.h> // Not actualy used but needed to compile
 #include "remote_data.hpp"
 #include "motor.h"
+#include "controller.h"
 Controller control;
 RH_ASK driver(4000);
 void setup() {
@@ -23,6 +24,6 @@ void loop() {
         Serial.print(data.get_x(), DEC);
         Serial.print(" Y: ");
         Serial.println(data.get_y(), DEC);
-        control.write(map(data.get_x(),0,1023,-100,100), map(data.get_y(),0,1023,-100,100));
+        control.write(data.get_x(), data.get_y());
     }
 }
