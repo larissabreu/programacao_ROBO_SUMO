@@ -1,16 +1,23 @@
 #include <ServoTimer2.h>
-#include <RH_ASK.h>
+#include <RH_NRF24.h>
 #include <SPI.h> // Not actualy used but needed to compile
 #include "remote_data.hpp"
 #include "motor.h"
 #include "controller.h"
+
+#define DEBUG
+
 Controller control;
-RH_ASK driver(4000);
+RH_NRF24 driver;
 void setup() {
     control.attach(2,3); 
+#ifdef DEBUG
     Serial.begin(9600);
     if (!driver.init())
          Serial.println("init failed");
+#else
+    driver.init()
+#endif
 }
 
 void loop() {
@@ -20,10 +27,13 @@ void loop() {
 
     if (driver.recv(buffer, &buf_length)) {
         data.read_from_byte_array(buffer);// interpreta os bits recebidos 
+#ifdef DEBUG
         Serial.print("X: ");
         Serial.print(data.get_x(), DEC);
         Serial.print(" Y: ");
         Serial.println(data.get_y(), DEC);
-        control.write(data.get_x(), data.get_y());
+#endif
+        if(data.is_valid())
+            control.write(data.get_x(), data.get_y());
     }
 }
