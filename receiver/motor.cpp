@@ -1,7 +1,7 @@
 #include <SPI.h> // Not actualy used but needed to compile
 #include "motor.h"
-Motor:: Motor() : servo(){
-}; 
+Motor:: Motor() : servo(){}; 
+
 void Motor :: move(int val){
 	servo.write(val);
 };

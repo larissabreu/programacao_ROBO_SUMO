@@ -1,12 +1,13 @@
 #ifndef CONTROLLER
 #define CONTROLLER
-#define MAX_FORWARD_SPEED 1700
-#define MIN_FORWARD_SPEED 1300
-
 #include <stdint.h>
 #include <Arduino.h>
 #include <ServoTimer2.h>
 #include "motor.h"
+
+#define MAX_FORWARD_SPEED 1710
+#define MIN_FORWARD_SPEED 1290
+
 
 struct Motor_Values{
   uint16_t left, rigth;
