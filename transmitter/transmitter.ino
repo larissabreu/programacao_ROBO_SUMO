@@ -1,4 +1,4 @@
-#include <RH_NRF24.h>
+#include <RH_ASK.h>
 #include <SPI.h> // Not actually used but needed to compile
 #include "remote_data.hpp"
 
@@ -7,7 +7,8 @@
 const int analog_x = A0;
 const int analog_y = A1;
 const int vout = 7;
-RH_NRF24 driver;
+
+RH_ASK driver(4000);
 
 void setup() {
     pinMode(vout, OUTPUT);
@@ -20,6 +21,7 @@ void setup() {
 #else
         driver.init();
 #endif
+    digitalWrite(7,1);// gambiarra pq o corno do jamal fodeu com a porta de 5v
 }
 
 void loop() {
