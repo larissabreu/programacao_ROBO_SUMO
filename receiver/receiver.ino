@@ -5,7 +5,7 @@
 #include "motor.h"
 #include "controller.h"
 
-#define DEBUG
+//#define DEBUG
 
 Controller control;
 RH_NRF24 driver;
@@ -16,16 +16,19 @@ void setup() {
     if (!driver.init())
          Serial.println("init failed");
 #else
-    driver.init()
+    driver.init();
 #endif
 }
 
 void loop() {
+    static uint16_t diff = 0;
+    static uint16_t timer = millis();
     RemoteProtocolHandler data;// Classe usada para manipular os bits recebidos
     uint8_t buffer[4];// Armazena a mensagem recebida    
     uint8_t buf_length = 4;// Armazena a mensagem recebida    
 
     if (driver.recv(buffer, &buf_length)) {
+        timer = millis();
         data.read_from_byte_array(buffer);// interpreta os bits recebidos 
 #ifdef DEBUG
         Serial.print("X: ");
@@ -35,5 +38,11 @@ void loop() {
 #endif
         if(data.is_valid())
             control.write(data.get_x(), data.get_y());
+
+    }
+    diff = millis() - timer;
+    if (diff > 200){
+        diff = 0;
+        control.write(512, 512);
     }
 }

@@ -5,8 +5,8 @@
 #include <ServoTimer2.h>
 #include "motor.h"
 
-#define MAX_FORWARD_SPEED 1710
-#define MIN_FORWARD_SPEED 1290
+#define MAX_FORWARD_SPEED 2000
+#define MIN_FORWARD_SPEED 1000
 
 
 struct Motor_Values{
